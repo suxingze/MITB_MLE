@@ -9,13 +9,22 @@ from dateutil.relativedelta import relativedelta
 import pprint
 import pyspark
 import pyspark.sql.functions as F
-
 from pyspark.sql.functions import col
 from pyspark.sql.types import StringType, IntegerType, FloatType, DateType
+from pyspark.sql.functions import col, when, lower, trim, regexp_replace, split, udf, explode, array_contains
+from pyspark.sql.types import FloatType, IntegerType, DateType
+from pyspark.ml.feature import StringIndexer, OneHotEncoder, VectorAssembler, StandardScaler
+from pyspark.ml import Pipeline
 
 import utils.data_processing_bronze_table
 import utils.data_processing_silver_table
 import utils.data_processing_gold_table
+import utils.financials_processing_bronze_table
+import utils.financials_processing_silver_table
+import utils.financials_processing_gold_table
+import utils.attributes_processing_bronze_table
+import utils.attributes_processing_silver_table
+import utils.attributes_processing_gold_table
 
 
 # Initialize SparkSession
@@ -99,6 +108,91 @@ df = spark.read.option("header", "true").parquet(*files_list)
 print("row_count:",df.count())
 
 df.show()
+
+
+# Define input and output directories
+bronze_features_financials_directory = "datamart/bronze/features_financials/"
+if not os.path.exists(bronze_features_financials_directory):
+    os.makedirs(bronze_features_financials_directory)
+
+# run bronze backfill
+for date_str in dates_str_lst:
+    utils.financials_processing_bronze_table.process_bronze_table(date_str, bronze_features_financials_directory, spark)
+
+# create bronze datalake
+silver_features_financials_directory = "datamart/silver/features_financials/"
+
+if not os.path.exists(silver_features_financials_directory):
+    os.makedirs(silver_features_financials_directory)
+
+# run silver backfill
+for date_str in dates_str_lst:
+    utils.financials_processing_silver_table.process_silver_table(date_str, bronze_features_financials_directory, silver_features_financials_directory, spark)
+
+# create bronze datalake
+gold_label_store_financials_directory = "datamart/gold/label_store_financials/"
+
+if not os.path.exists(gold_label_store_financials_directory):
+    os.makedirs(gold_label_store_financials_directory)
+
+# run gold backfill
+for date_str in dates_str_lst:
+    utils.financials_processing_gold_table.process_labels_gold_table(date_str, silver_features_financials_directory, gold_label_store_financials_directory, spark)
+
+folder_path = gold_label_store_financials_directory
+files_list = [folder_path+os.path.basename(f) for f in glob.glob(os.path.join(folder_path, '*'))]
+df = spark.read.option("header", "true").parquet(*files_list)
+print("row_count:",df.count())
+
+columns_to_show = ['Customer_ID', 'Credit_History_Months_Total', 'EMI_to_Income_Ratio',
+       'Invested_to_Income_Ratio', 'Credit_Mix_Encoded',
+       'Payment_of_Min_Amount_Encoded', 'spending_level', 'value_level']  
+df.select(*columns_to_show).show()
+
+columns_to_show = ['Customer_ID', 'debt consolidation loan', 'personal loan',
+       'payday loan', 'mortgage loan', 'not specified', 'credit-builder loan',
+       'auto loan', 'home equity loan', 'student loan']  
+df.select(*columns_to_show).show()
+
+# Define input and output directories
+bronze_features_attributes_directory = "datamart/bronze/features_attributes/"
+if not os.path.exists(bronze_features_attributes_directory):
+    os.makedirs(bronze_features_attributes_directory)
+
+# run bronze backfill
+for date_str in dates_str_lst:
+    utils.attributes_processing_bronze_table.process_bronze_table(date_str, bronze_features_attributes_directory, spark)
+
+# create bronze datalake
+silver_features_attributes_directory = "datamart/silver/features_attributes/"
+
+if not os.path.exists(silver_features_attributes_directory):
+    os.makedirs(silver_features_attributes_directory)
+
+# run silver backfill
+for date_str in dates_str_lst:
+    utils.attributes_processing_silver_table.process_silver_table(date_str, bronze_features_attributes_directory, silver_features_attributes_directory, spark)
+
+# create bronze datalake
+gold_label_store_attributes_directory = "datamart/gold/label_store_attributes/"
+
+if not os.path.exists(gold_label_store_attributes_directory):
+    os.makedirs(gold_label_store_attributes_directory)
+
+# run gold backfill
+for date_str in dates_str_lst:
+    utils.attributes_processing_gold_table.process_labels_gold_table(date_str, silver_features_attributes_directory, gold_label_store_attributes_directory, spark)
+
+folder_path = gold_label_store_attributes_directory
+files_list = [folder_path+os.path.basename(f) for f in glob.glob(os.path.join(folder_path, '*'))]
+df = spark.read.option("header", "true").parquet(*files_list)
+print("row_count:",df.count())
+
+df.show()
+
+
+
+
 
 
 
