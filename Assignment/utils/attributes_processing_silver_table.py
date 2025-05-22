@@ -50,18 +50,9 @@ def process_silver_table(snapshot_date_str, bronze_features_attributes_directory
     # Handle SSN: Replace "#F%$D@*&8" with null
     df = df.withColumn("SSN", when(col("SSN") == "#F%$D@*&8", None).otherwise(col("SSN")))
 
-    # Replace "_______" in Occupation with null and drop rows with null Occupation
+    # Replace "______" in Occupation with null and drop rows with null Occupation
     df = df.withColumn("Occupation", when(col("Occupation") == "______", None).otherwise(col("Occupation")))
     df = df.na.drop(subset=["Occupation"])  # Drop rows with invalid Occupation
-
-    # Create Age Group feature
-    df = df.withColumn("Age_Group",
-        when(col("Age") < 18, "<18")
-        .when((col("Age") >= 18) & (col("Age") <= 30), "18-30")
-        .when((col("Age") >= 31) & (col("Age") <= 45), "31-45")
-        .when((col("Age") >= 46) & (col("Age") <= 60), "46-60")
-        .otherwise(">60")
-    )
 
     # save silver table - IRL connect to database to write
     partition_name = "silver_features_attributes_" + snapshot_date_str.replace('-','_') + '.parquet'
