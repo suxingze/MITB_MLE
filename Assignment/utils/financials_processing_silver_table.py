@@ -31,16 +31,15 @@ def process_silver_table(snapshot_date_str, bronze_features_financials_directory
            .withColumn("Num_Credit_Card", when(col("Num_Credit_Card") < 0, None).otherwise(col("Num_Credit_Card"))) \
            .withColumn("Interest_Rate", when(col("Interest_Rate") < 0, None).otherwise(col("Interest_Rate"))) \
            .withColumn("Num_of_Loan", when(col("Num_of_Loan") < 0, None).otherwise(col("Num_of_Loan")))
+    df = df.withColumn("Num_Bank_Accounts", when(col("Num_Bank_Accounts") > 100, None).otherwise(col("Num_Bank_Accounts"))) \
+           .withColumn("Num_Credit_Card", when(col("Num_Credit_Card") > 100, None).otherwise(col("Num_Credit_Card"))) \
+           .withColumn("Interest_Rate", when(col("Interest_Rate") > 35, None).otherwise(col("Interest_Rate")))
     df = df.na.drop()
 
     # Replace "_" with null and handle invalid numeric values
     for column in df.columns:
         df = df.withColumn(column, when(col(column) == "_", None).otherwise(col(column)))
         df = df.withColumn(column, regexp_replace(col(column), "_$", "").cast("string"))
-
-    # Drop rows with null values in critical columns
-    critical_columns = ["Customer_ID", "snapshot_date", "Annual_Income", "Monthly_Inhand_Salary"]
-    df = df.na.drop(subset=critical_columns)
 
     # Correct data types
     df = df.withColumn("snapshot_date", col("snapshot_date").cast(DateType())) \
@@ -60,6 +59,10 @@ def process_silver_table(snapshot_date_str, bronze_features_financials_directory
            .withColumn("Amount_invested_monthly", col("Amount_invested_monthly").cast(FloatType())) \
            .withColumn("Monthly_Balance", col("Monthly_Balance").cast(FloatType()))
 
+    # Drop rows with null values in critical columns
+    critical_columns = ["Customer_ID", "snapshot_date", "Annual_Income", "Monthly_Inhand_Salary", "Total_EMI_per_month", "Amount_invested_monthly", "Changed_Credit_Limit"]
+    df = df.na.drop(subset=critical_columns)
+    
     # Standardize text fields
     text_columns = ["Type_of_Loan", "Credit_Mix", "Payment_of_Min_Amount", "Payment_Behaviour"]
     for col_name in text_columns:
