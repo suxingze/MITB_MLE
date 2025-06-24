@@ -1,4 +1,26 @@
 services:
+  jupyter:
+    build: .
+    ports:
+      - "8890:8890"
+    volumes:
+      - .:/app
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+    entrypoint: []
+    command:
+      [
+        "jupyter",
+        "lab",
+        "--ip=0.0.0.0",
+        "--port=8890",
+        "--no-browser",
+        "--allow-root",
+        "--notebook-dir=/app",
+        "--ServerApp.token=''",
+        "--ServerApp.disable_check_xsrf=True"
+      ]
+
   airflow-init:
     build: .
     environment:
@@ -8,7 +30,6 @@ services:
     volumes:
       - airflow_data:/opt/airflow
       - ./dags:/opt/airflow/dags
-      - ./scripts:/opt/airflow/scripts
       - ./utils:/opt/airflow/scripts/utils
       - ./data:/opt/airflow/scripts/data
       - ./model_bank:/opt/airflow/scripts/model_bank
@@ -29,7 +50,6 @@ services:
     volumes:
       - airflow_data:/opt/airflow
       - ./dags:/opt/airflow/dags
-      - ./scripts:/opt/airflow/scripts
       - ./utils:/opt/airflow/scripts/utils
       - ./data:/opt/airflow/scripts/data
       - ./model_bank:/opt/airflow/scripts/model_bank
@@ -50,7 +70,6 @@ services:
     volumes:
       - airflow_data:/opt/airflow
       - ./dags:/opt/airflow/dags
-      - ./scripts:/opt/airflow/scripts
       - ./utils:/opt/airflow/scripts/utils
       - ./data:/opt/airflow/scripts/data
       - ./model_bank:/opt/airflow/scripts/model_bank

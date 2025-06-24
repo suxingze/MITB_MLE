@@ -33,3 +33,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Create a volume mount point for notebooks
 VOLUME /app
+
+# Optional: expose Jupyter port
+EXPOSE 8890
+
+# Default command (when running this image directly)
+CMD ["jupyter", "lab", "--ip=0.0.0.0", "--port=8890", "--no-browser", "--allow-root", "--notebook-dir=/app"]
