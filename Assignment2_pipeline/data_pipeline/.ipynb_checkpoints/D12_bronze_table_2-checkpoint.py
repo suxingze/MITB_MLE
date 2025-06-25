@@ -74,17 +74,17 @@ dates_str_lst = generate_first_of_month_dates(start_date_str, end_date_str)
 print(dates_str_lst)
 
 # Config Directory
-bronze_lms_directory = "datamart/bronze/lms/"
-bronze_clks_directory = "datamart/bronze/clks/"
-bronze_attr_directory = "datamart/bronze/attr/"
-bronze_fin_directory = "datamart/bronze/fin/"
-silver_lms_directory = "datamart/silver/lms/"
-silver_clks_directory = "datamart/silver/clks/"
-silver_attr_directory = "datamart/silver/attr/"
-silver_fin_directory = "datamart/silver/fin/"
-gold_clks_directory = "datamart/gold/feature_store/eng/"
-gold_fin_directory = "datamart/gold/feature_store/cust_fin_risk/"
-gold_label_store_directory = "datamart/gold/label_store/"
+bronze_lms_directory = "../datamart/bronze/lms/"
+bronze_clks_directory = "../datamart/bronze/clks/"
+bronze_attr_directory = "../datamart/bronze/attr/"
+bronze_fin_directory = "../datamart/bronze/fin/"
+silver_lms_directory = "../datamart/silver/lms/"
+silver_clks_directory = "../datamart/silver/clks/"
+silver_attr_directory = "../datamart/silver/attr/"
+silver_fin_directory = "../datamart/silver/fin/"
+gold_clks_directory = "../datamart/gold/feature_store/eng/"
+gold_fin_directory = "../datamart/gold/feature_store/cust_fin_risk/"
+gold_label_store_directory = "../datamart/gold/label_store/"
 
 
 # ---------------------- 
@@ -92,7 +92,7 @@ gold_label_store_directory = "datamart/gold/label_store/"
 # ---------------------- 
 
 # Attributes Data
-bronze_attr_directory = "datamart/bronze/attr/"
+bronze_attr_directory = "../datamart/bronze/attr/"
 
 if not os.path.exists(bronze_attr_directory):
     os.makedirs(bronze_attr_directory)

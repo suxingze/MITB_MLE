@@ -16,7 +16,7 @@ current_date = datetime.strptime(current_date_str, '%Y-%m-%d').date()
 # --------------------------------
 # Data Source Directory Check
 # --------------------------------
-data_dir = "datamart"
+data_dir = "../datamart"
 
 print(f"Checking Data Source Directory: {data_dir}...")
 if not os.path.exists(data_dir):
