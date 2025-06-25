@@ -20,7 +20,7 @@ def process_bronze_loan_table(snapshot_date_str, bronze_lms_directory, spark):
     snapshot_date = datetime.strptime(snapshot_date_str, "%Y-%m-%d")
     
     # connect to source back end - IRL connect to back end source system
-    csv_file_path = "data/lms_loan_daily.csv"
+    csv_file_path = "../data/lms_loan_daily.csv"
 
     # load data - IRL ingest from back end source system
     df = spark.read.csv(csv_file_path, header=True, inferSchema=True).filter(col('snapshot_date') == snapshot_date)
@@ -39,7 +39,7 @@ def process_bronze_clickstream_table(snapshot_date_str, bronze_clks_directory, s
     snapshot_date = datetime.strptime(snapshot_date_str, "%Y-%m-%d")
     
     # connect to source back end - IRL connect to back end source system
-    csv_file_path = "data/feature_clickstream.csv" 
+    csv_file_path = "../data/feature_clickstream.csv" 
 
     # load data - IRL ingest from back end source system
     df = spark.read.csv(csv_file_path, header=True, inferSchema=True).filter(col('snapshot_date') == snapshot_date)
@@ -58,7 +58,7 @@ def process_bronze_attributes_table(snapshot_date_str, bronze_attr_directory, sp
     snapshot_date = datetime.strptime(snapshot_date_str, "%Y-%m-%d")
     
     # connect to source back end - IRL connect to back end source system
-    csv_file_path = "data/features_attributes.csv"
+    csv_file_path = "../data/features_attributes.csv"
 
     # load data - IRL ingest from back end source system
     df = spark.read.csv(csv_file_path, header=True, inferSchema=True).filter(col('snapshot_date') == snapshot_date)
@@ -77,7 +77,7 @@ def process_bronze_financials_table(snapshot_date_str, bronze_fin_directory, spa
     snapshot_date = datetime.strptime(snapshot_date_str, "%Y-%m-%d")
     
     # connect to source back end - IRL connect to back end source system
-    csv_file_path = "data/features_financials.csv"
+    csv_file_path = "../data/features_financials.csv"
 
     # load data - IRL ingest from back end source system
     df = spark.read.csv(csv_file_path, header=True, inferSchema=True).filter(col('snapshot_date') == snapshot_date)
