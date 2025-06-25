@@ -41,8 +41,6 @@ current_date = datetime.strptime(current_date_str, '%Y-%m-%d').date()
 
 
 # set up config
-snapshot_date_str = "2023-01-01"
-
 start_date_str = "2023-01-01"
 end_date_str = current_date_str
 

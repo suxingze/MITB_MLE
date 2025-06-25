@@ -14,7 +14,7 @@ with DAG(
     default_args=default_args,
     description='data pipeline run once a month',
     schedule_interval='0 0 1 * *',  # At 00:00 on day-of-month 1
-    start_date=datetime(2023, 2, 1),
+    start_date=datetime(2024, 1, 1),
     end_date=datetime(2024, 12, 1),
     catchup=True,
 ) as dag:
