@@ -14,7 +14,7 @@ with DAG(
     default_args=default_args,
     description='data pipeline run once a month',
     schedule_interval='0 0 1 * *',  # At 00:00 on day-of-month 1
-    start_date=datetime(2024, 1, 1),
+    start_date=datetime(2024, 10, 1),
     end_date=datetime(2024, 12, 1),
     catchup=True,
 ) as dag:
@@ -33,7 +33,7 @@ with DAG(
     )
 
     bronze_label_store = BashOperator(
-        task_id='run_bronze_label_store',
+        task_id='bronze_label_store',
         bash_command=(
             'cd /opt/airflow/scripts && '
             'python3 data_pipeline/D10_bronze_label.py '
@@ -131,7 +131,7 @@ with DAG(
         task_id="silver_table_1",
         bash_command=(
             'cd /opt/airflow/scripts && '
-            'python3 data_pipeline/21_silver_table_1.py '
+            'python3 data_pipeline/D21_silver_table_1.py '
             '--snapshotdate "{{ ds }}"'
         ),
     )
@@ -140,7 +140,7 @@ with DAG(
         task_id="silver_table_2",
         bash_command=(
             'cd /opt/airflow/scripts && '
-            'python3 data_pipeline/22_silver_table_2.py '
+            'python3 data_pipeline/D22_silver_table_2.py '
             '--snapshotdate "{{ ds }}"'
         ),
     )
@@ -149,7 +149,7 @@ with DAG(
         task_id="silver_table_3",
         bash_command=(
             'cd /opt/airflow/scripts && '
-            'python3 data_pipeline/23_silver_table_3.py '
+            'python3 data_pipeline/D23_silver_table_3.py '
             '--snapshotdate "{{ ds }}"'
         ),
     )

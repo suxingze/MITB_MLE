@@ -30,7 +30,7 @@ services:
     volumes:
       - airflow_data:/opt/airflow
       - ./dags:/opt/airflow/dags
-      - ./utils:/opt/airflow/scripts/utils
+      - ./data:/opt/airflow/data
       - ./model_bank:/opt/airflow/scripts/model_bank
       - ./data_pipeline:/opt/airflow/scripts/data_pipeline
       - ./ml_pipeline:/opt/airflow/scripts/ml_pipeline
@@ -49,7 +49,7 @@ services:
     volumes:
       - airflow_data:/opt/airflow
       - ./dags:/opt/airflow/dags
-      - ./utils:/opt/airflow/scripts/utils
+      - ./data:/opt/airflow/data
       - ./model_bank:/opt/airflow/scripts/model_bank
       - ./data_pipeline:/opt/airflow/scripts/data_pipeline
       - ./ml_pipeline:/opt/airflow/scripts/ml_pipeline
@@ -68,7 +68,7 @@ services:
     volumes:
       - airflow_data:/opt/airflow
       - ./dags:/opt/airflow/dags
-      - ./utils:/opt/airflow/scripts/utils
+      - ./data:/opt/airflow/data
       - ./model_bank:/opt/airflow/scripts/model_bank
       - ./data_pipeline:/opt/airflow/scripts/data_pipeline
       - ./ml_pipeline:/opt/airflow/scripts/ml_pipeline
