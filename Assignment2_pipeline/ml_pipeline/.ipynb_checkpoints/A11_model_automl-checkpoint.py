@@ -22,6 +22,17 @@ from sklearn.model_selection import RandomizedSearchCV
 from sklearn.metrics import make_scorer, f1_score, roc_auc_score
 from sklearn.datasets import make_classification
 from sklearn.model_selection import train_test_split
+import argparse
+
+# --------------------------------
+# Parse Command Line Arguments
+# --------------------------------
+parser = argparse.ArgumentParser(description="Data pipeline start script for data source checks.")
+parser.add_argument('--snapshotdate', type=str, help='The snapshot date for the data checks (YYYY-MM-DD).')
+args = parser.parse_args()
+current_date_str = args.snapshotdate
+current_date = datetime.strptime(current_date_str, '%Y-%m-%d').date()
+
 
 # Initialize SparkSession
 spark = pyspark.sql.SparkSession.builder \
@@ -33,7 +44,7 @@ spark = pyspark.sql.SparkSession.builder \
 spark.sparkContext.setLogLevel("ERROR")
 
 # set up config
-model_train_date_str = "2024-09-01"
+model_train_date_str = current_date_str
 train_test_period_months = 12
 oot_period_months = 2
 train_test_ratio = 0.8

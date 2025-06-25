@@ -80,17 +80,20 @@ def main(snapshotdate, modelname):
     features_sdf = features_sdf_1.join(features_sdf_2, on=["Customer_ID"], how="left")
     
     print("extracted features_sdf", features_sdf.count(), config["snapshot_date"])
+    features_sdf.show(5)
     
     features_pdf = features_sdf.toPandas()
     columns_to_exclude = ['Customer_ID', 'snapshot_date']
     columns_to_rename = [col for col in features_pdf.columns if col not in columns_to_exclude]
     rename_dict = {col: 'feature_' + col for col in columns_to_rename}
     features_pdf.rename(columns=rename_dict, inplace=True)
+    features_pdf.info()
 
     # --- preprocess data for modeling ---
     # prepare X_inference
     feature_cols = [fe_col for fe_col in features_pdf.columns if fe_col.startswith('feature_')]
     X_inference = features_pdf[feature_cols]
+    print(X_inference)
     
     # apply transformer - standard scaler
     transformer_stdscaler = model_artefact["preprocessing_transformers"]["stdscaler"]
@@ -113,7 +116,7 @@ def main(snapshotdate, modelname):
     
     # --- save model inference to datamart gold table ---
     # create bronze datalake
-    gold_directory = f"datamart/gold/model_predictions/{config["model_name"][:-4]}/"
+    gold_directory = f"datamart/gold/model_predictions/{config['model_name'][:-4]}/"
     print(gold_directory)
     
     if not os.path.exists(gold_directory):

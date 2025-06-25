@@ -8,22 +8,41 @@ import random
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 import pprint
-import pyspark
-import pyspark.sql.functions as F
+import argparse
 
-from pyspark.sql.functions import col, to_date
-from pyspark.sql.types import StringType, IntegerType, FloatType, DateType
-
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-
-import xgboost as xgb
-from sklearn.model_selection import RandomizedSearchCV
-from sklearn.metrics import make_scorer, f1_score, roc_auc_score
-from sklearn.datasets import make_classification
-from sklearn.model_selection import train_test_split
+# --------------------------------
+# Parse Command Line Arguments
+# --------------------------------
+parser = argparse.ArgumentParser(description="Data pipeline start script for data source checks.")
+parser.add_argument('--snapshotdate', type=str, help='The snapshot date for the data checks (YYYY-MM-DD).')
+args = parser.parse_args()
+current_date_str = args.snapshotdate
+current_date = datetime.strptime(current_date_str, '%Y-%m-%d').date()
 
 
+# set up config
+model_train_date_str = current_date_str
+train_test_period_months = 12
+oot_period_months = 2
+train_test_ratio = 0.8
 
+config = {}
+config["model_train_date_str"] = model_train_date_str
+config["train_test_period_months"] = train_test_period_months
+config["oot_period_months"] =  oot_period_months
+config["model_train_date"] =  datetime.strptime(model_train_date_str, "%Y-%m-%d")
+config["oot_end_date"] =  config['model_train_date'] - timedelta(days = 1)
+config["oot_start_date"] =  config['model_train_date'] - relativedelta(months = oot_period_months)
+config["train_test_end_date"] =  config["oot_start_date"] - timedelta(days = 1)
+config["train_test_start_date"] =  config["oot_start_date"] - relativedelta(months = train_test_period_months)
+config["train_test_ratio"] = train_test_ratio
+
+start_date_str = "2023-01-01"
+start_date = datetime.strptime(start_date_str, '%Y-%m-%d')
+if config["train_test_start_date"] < start_date:
+    print(f"Required train set start date is earlier than {start_date_str}, Auto model training exits.")
+    raise SystemExit("Exiting the program due to missing Current date's data.")
+else:
+    print(f"Auto model training starts.")
 
 
