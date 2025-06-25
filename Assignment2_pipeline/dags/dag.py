@@ -183,8 +183,8 @@ with DAG(
     
     # Define task dependencies to run scripts sequentially
     dep_check_source_data_bronze_1 >> bronze_table_1 >> silver_table_1 >> gold_feature_store_1
-    dep_check_source_data_bronze_2 >> bronze_table_2 >> silver_table_1 >> gold_feature_store_2
-    dep_check_source_data_bronze_3 >> bronze_table_3 >> silver_table_2
+    dep_check_source_data_bronze_2 >> bronze_table_2 >> silver_table_2 >> gold_feature_store_2
+    dep_check_source_data_bronze_3 >> bronze_table_3 >> silver_table_3
     gold_feature_store_1 >> feature_store_completed
     gold_feature_store_2 >> feature_store_completed
 

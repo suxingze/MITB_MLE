@@ -32,7 +32,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # RUN pip install pyspark
 
 # Create a volume mount point for notebooks
-VOLUME /app
+# VOLUME /app
 
 # Optional: expose Jupyter port
 EXPOSE 8890
