@@ -108,7 +108,7 @@ evaluation['f1'] = [f1]
 evaluation['ROC AUC'] = [roc_auc]
 
 # save evaluation
-evaluation_directory = f"../datamart/gold/model_predictions/{config['model_name'][:-4]}/"
+evaluation_directory = f"../datamart/gold/model_predictions/model_predictions_results/"
 partition_name = config['model_name'][:-4] + "_predictions_" + current_date_str.replace('-','_') + '.csv'
 filepath = evaluation_directory + partition_name
 evaluation.to_csv(filepath)
